@@ -1,0 +1,55 @@
+ARG BASE_VERSION=15.1
+FROM ghcr.io/daemonless/base-exec:${BASE_VERSION}
+
+ARG FREEBSD_ARCH=amd64
+ARG PKG_NAME="glance"
+ARG PACKAGES="glance ca_root_nss"
+ARG HEALTHCHECK_ENDPOINT="http://localhost:8080/api/healthz"
+
+ENV HEALTHCHECK_URL="${HEALTHCHECK_ENDPOINT}"
+
+LABEL org.opencontainers.image.title="{{ title }}" \
+      org.opencontainers.image.description="{{ description }}" \
+      org.opencontainers.image.source="{{ repo_url }}" \
+      org.opencontainers.image.url="{{ web_url }}" \
+      org.opencontainers.image.documentation="https://github.com/glanceapp/glance/blob/main/docs/configuration.md" \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.vendor="daemonless" \
+      org.opencontainers.image.authors="daemonless" \
+      io.daemonless.category="{{ category }}" \
+{%- if ports %}
+      io.daemonless.port="{{ ports[0].port }}" \
+{%- endif %}
+{%- if volumes %}
+      io.daemonless.volumes="{{ volumes | map(attribute='path') | join(',') }}" \
+{%- endif %}
+      io.daemonless.arch="${FREEBSD_ARCH}" \
+      io.daemonless.pkg-source="pkg" \
+      io.daemonless.packages="${PACKAGES}" \
+      io.daemonless.pkg-name="${PKG_NAME}" \
+      io.daemonless.healthcheck-url="${HEALTHCHECK_ENDPOINT}"
+
+# Install from FreeBSD packages
+RUN pkg update && \
+    pkg install -y ${PACKAGES} && \
+    mkdir -p /app /config && \
+    pkg query '%v' ${PKG_NAME} > /app/version && \
+    chmod -R a+rX /app && \
+    chown -R bsd:bsd /config && \
+    pkg clean -ay && \
+    rm -rf /var/cache/pkg/* /var/db/pkg/repos/*
+
+COPY root/ /
+RUN /usr/local/bin/glance --config /defaults/glance.yml config:validate && \
+    chmod -R a+rX /defaults && \
+    chmod +x /daemonless/libexec/glance /daemonless/init.d/* /healthz
+
+CMD ["/daemonless/libexec/glance"]
+
+{%- if ports %}
+EXPOSE {{ ports | map(attribute='port') | join(' ') }}
+{%- endif %}
+
+{%- if volumes %}
+VOLUME {{ volumes | map(attribute='path') | join(' ') }}
+{%- endif %}

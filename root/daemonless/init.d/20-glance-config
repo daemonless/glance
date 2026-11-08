@@ -1,0 +1,12 @@
+#!/bin/sh
+# First run: seed /config/glance.yml from the default template.
+mkdir -p /config/assets
+
+if [ ! -f /config/glance.yml ]; then
+    cp /defaults/glance.yml /config/glance.yml
+    echo "[glance] Created default /config/glance.yml"
+fi
+
+if [ "$(id -u)" = 0 ]; then
+    chown -R bsd:bsd /config
+fi

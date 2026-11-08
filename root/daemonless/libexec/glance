@@ -1,0 +1,7 @@
+#!/bin/sh
+# Start glance; /init has already dropped to the run user.
+
+export HOME=/config
+
+cd /config
+exec /usr/local/bin/glance --config /config/glance.yml

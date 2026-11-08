@@ -1,0 +1,3 @@
+#!/bin/sh
+# Daemonless healthcheck for glance
+fetch -qo /dev/null "${HEALTHCHECK_URL:-http://127.0.0.1:8080/api/healthz}"

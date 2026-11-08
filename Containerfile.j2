@@ -1,0 +1,66 @@
+ARG BASE_VERSION=15.1
+FROM ghcr.io/daemonless/base-exec:${BASE_VERSION}
+
+ARG FREEBSD_ARCH=amd64
+ARG PACKAGES="ca_root_nss"
+ARG UPSTREAM_URL="https://api.github.com/repos/glanceapp/glance/releases/latest"
+ARG UPSTREAM_JQ=".tag_name"
+ARG HEALTHCHECK_ENDPOINT="http://localhost:8080/api/healthz"
+
+ENV HEALTHCHECK_URL="${HEALTHCHECK_ENDPOINT}"
+
+LABEL org.opencontainers.image.title="{{ title }}" \
+      org.opencontainers.image.description="{{ description }}" \
+      org.opencontainers.image.source="{{ repo_url }}" \
+      org.opencontainers.image.url="{{ web_url }}" \
+      org.opencontainers.image.documentation="https://github.com/glanceapp/glance/blob/main/docs/configuration.md" \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.vendor="daemonless" \
+      org.opencontainers.image.authors="daemonless" \
+      io.daemonless.category="{{ category }}" \
+{%- if ports %}
+      io.daemonless.port="{{ ports[0].port }}" \
+{%- endif %}
+{%- if volumes %}
+      io.daemonless.volumes="{{ volumes | map(attribute='path') | join(',') }}" \
+{%- endif %}
+      io.daemonless.arch="${FREEBSD_ARCH}" \
+      io.daemonless.upstream-url="${UPSTREAM_URL}" \
+      io.daemonless.upstream-jq="${UPSTREAM_JQ}" \
+      io.daemonless.healthcheck-url="${HEALTHCHECK_ENDPOINT}" \
+      io.daemonless.packages="${PACKAGES}"
+
+# Install ca_root_nss for HTTPS feeds and widget API requests
+RUN pkg update && \
+    pkg install -y ${PACKAGES} && \
+    pkg clean -ay && \
+    rm -rf /var/cache/pkg/* /var/db/pkg/repos/*
+
+# Download and install the official Glance FreeBSD binary.
+# Release asset uses Go arch naming (aarch64 -> arm64).
+RUN GLANCE_VERSION=$(fetch -qo - "${UPSTREAM_URL}" | jq -r "${UPSTREAM_JQ}") && \
+    case "${FREEBSD_ARCH}" in aarch64) GLANCE_ARCH=arm64 ;; *) GLANCE_ARCH=${FREEBSD_ARCH} ;; esac && \
+    echo "Installing Glance ${GLANCE_VERSION} (freebsd-${GLANCE_ARCH})" && \
+    fetch -qo /tmp/glance.tar.gz "https://github.com/glanceapp/glance/releases/download/${GLANCE_VERSION}/glance-freebsd-${GLANCE_ARCH}.tar.gz" && \
+    mkdir -p /usr/local/bin /app /config && \
+    tar xzf /tmp/glance.tar.gz -C /usr/local/bin glance && \
+    chmod +x /usr/local/bin/glance && \
+    echo "${GLANCE_VERSION}" > /app/version && \
+    chmod -R a+rX /app && \
+    chown -R bsd:bsd /config && \
+    rm /tmp/glance.tar.gz
+
+COPY root/ /
+RUN /usr/local/bin/glance --config /defaults/glance.yml config:validate && \
+    chmod -R a+rX /defaults && \
+    chmod +x /daemonless/libexec/glance /daemonless/init.d/* /healthz
+
+CMD ["/daemonless/libexec/glance"]
+
+{%- if ports %}
+EXPOSE {{ ports | map(attribute='port') | join(' ') }}
+{%- endif %}
+
+{%- if volumes %}
+VOLUME {{ volumes | map(attribute='path') | join(' ') }}
+{%- endif %}

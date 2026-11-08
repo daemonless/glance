@@ -1,0 +1,41 @@
+name: glance
+
+x-daemonless:
+  title: "Glance"
+  icon: ":material-view-dashboard:"
+  category: "Utilities"
+  description: "Fast, lightweight self-hosted dashboard that puts all your feeds and widgets in one place, configured through a single YAML file."
+  upstream_url: "https://github.com/glanceapp/glance"
+  web_url: "https://github.com/glanceapp/glance/blob/main/docs/configuration.md"
+  freshports_url: "https://www.freshports.org/www/glance/"
+  user: "bsd"
+  mlock: false
+  appjail: true
+  community: "Discord:https://discord.gg/Kb9tkhecZT"
+
+  docs:
+    env:
+      PUID: "User ID for the application process"
+      PGID: "Group ID for the application process"
+      TZ: "Timezone for the container"
+    volumes:
+      /config: "Configuration directory (glance.yml and custom assets)"
+    ports:
+      8080: "Web UI"
+
+services:
+  glance:
+    image: ghcr.io/daemonless/glance:latest
+    container_name: glance
+    restart: unless-stopped
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+
+    volumes:
+      - /path/to/containers/glance:/config
+
+    ports:
+      - 8080:8080

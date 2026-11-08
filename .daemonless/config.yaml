@@ -1,0 +1,27 @@
+# dbuild configuration file
+# Full reference: https://github.com/daemonless/dbuild
+
+icon: ':material-view-dashboard:'
+
+build:
+  architectures:
+    - amd64
+    - aarch64
+  variants:
+    - tag: latest
+      containerfile: Containerfile
+      default: true
+    - tag: pkg
+      containerfile: Containerfile.pkg
+    - tag: pkg-latest
+      containerfile: Containerfile.pkg
+      args:
+        BASE_VERSION: "15.1-latest"
+
+cit:
+  mode: screenshot
+  port: 8080
+  health: /api/healthz
+  ready: "Starting server on"
+  # The default page's RSS titles and today's calendar date change between runs
+  ssim_threshold: 0.85
