@@ -1,11 +1,11 @@
 {
-  "generated": "2026-11-08T21:47:30Z",
+  "generated": "2026-11-14T22:00:59Z",
   "image": "glance",
   "tags": {
     "latest-amd64": {
       "app_version": "v0.8.8",
       "arch": "amd64",
-      "generated": "2026-11-08T21:47:00Z",
+      "generated": "2026-11-14T21:58:51Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -392,7 +392,7 @@
     "pkg-amd64": {
       "app_version": "0.8.6_2",
       "arch": "amd64",
-      "generated": "2026-11-08T21:46:31Z",
+      "generated": "2026-11-14T21:59:16Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -784,9 +784,9 @@
       }
     },
     "pkg-latest-amd64": {
-      "app_version": "0.8.7",
+      "app_version": "0.8.8_1",
       "arch": "amd64",
-      "generated": "2026-11-08T21:46:17Z",
+      "generated": "2026-11-14T21:58:40Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -1040,7 +1040,7 @@
               "GPLv3"
             ],
             "name": "glance",
-            "version": "0.8.7"
+            "version": "0.8.8_1"
           },
           {
             "licenses": [
@@ -1128,22 +1128,22 @@
           {
             "name": "golang.org/x/crypto",
             "purl": "",
-            "version": "v0.56.0"
+            "version": "v0.58.0"
           },
           {
             "name": "golang.org/x/net",
             "purl": "",
-            "version": "v0.58.0"
+            "version": "v0.62.0"
           },
           {
             "name": "golang.org/x/sys",
             "purl": "",
-            "version": "v0.47.0"
+            "version": "v0.49.0"
           },
           {
             "name": "golang.org/x/text",
             "purl": "",
-            "version": "v0.41.0"
+            "version": "v0.43.0"
           },
           {
             "name": "gopkg.in/yaml.v3",
@@ -1153,7 +1153,7 @@
           {
             "name": "stdlib",
             "purl": "",
-            "version": "v1.27.3"
+            "version": "v1.27.4"
           }
         ],
         "java": [],
