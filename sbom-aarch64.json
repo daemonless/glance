@@ -1,11 +1,11 @@
 {
-  "generated": "2026-11-15T12:37:07Z",
+  "generated": "2026-11-17T09:09:56Z",
   "image": "glance",
   "tags": {
     "latest-aarch64": {
       "app_version": "v0.8.8",
       "arch": "aarch64",
-      "generated": "2026-11-15T12:34:14Z",
+      "generated": "2026-11-17T09:07:39Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -273,7 +273,7 @@
               "BSD2CLAUSE"
             ],
             "name": "pkg",
-            "version": "2.8.4"
+            "version": "2.9.2"
           }
         ],
         "go": [
@@ -390,9 +390,9 @@
       }
     },
     "pkg-aarch64": {
-      "app_version": "0.8.6_2",
+      "app_version": "0.8.6_3",
       "arch": "aarch64",
-      "generated": "2026-11-15T12:34:16Z",
+      "generated": "2026-11-17T09:07:41Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -646,7 +646,7 @@
               "GPLv3"
             ],
             "name": "glance",
-            "version": "0.8.6_2"
+            "version": "0.8.6_3"
           },
           {
             "licenses": [
@@ -667,7 +667,7 @@
               "BSD2CLAUSE"
             ],
             "name": "pkg",
-            "version": "2.8.4"
+            "version": "2.9.2"
           }
         ],
         "go": [
@@ -759,7 +759,7 @@
           {
             "name": "stdlib",
             "purl": "",
-            "version": "v1.27.3"
+            "version": "v1.27.4"
           }
         ],
         "java": [],
@@ -786,7 +786,7 @@
     "pkg-latest-aarch64": {
       "app_version": "0.8.7",
       "arch": "aarch64",
-      "generated": "2026-11-15T12:34:20Z",
+      "generated": "2026-11-17T09:07:45Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
